@@ -5,44 +5,108 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/17 21:27:39 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/17 22:19:05 by mait-elk         ###   ########.fr       */
+/*   Created: 2023/11/21 10:54:40 by mait-elk          #+#    #+#             */
+/*   Updated: 2023/11/21 12:59:33 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#define BUFFER_SIZE 5
 #include "get_next_line.h"
 
-#define BUFFERSIZE 12
-int _prtchar(char c)
+int	_nsx_strlen(char *s)
 {
-	return (write(1, &c, 1));
+	int	i;
+
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
 }
 
-int _prtstr(char *s)
+int	_nsx_strcmp(char *s1, char *s2)
 {
-	while (*s)
-		_prtchar(*s++);
+	if (!s1 && !s2)
+		return (0);
+	if (!s1)
+		return (0);
+	if (!s2)
+		return (1);
+	while (*s1 || *s2)
+	{
+		if (*s1 != *s2)
+			return (1);
+		s1++;
+		s2++;
+	}
 	return (0);
 }
 
-char	*get_next_line(int fd)
+char	*_nsx_strdup(char *s)
 {
-	char *res;
-	char *buffer;
+	int		i;
+	char	*res;
 
-	buffer = malloc(BUFFERSIZE + 1);
-	while (read(fd, buffer, BUFFERSIZE))
+	i = 0;
+	res = malloc(_nsx_strlen(s) + 1);
+	while (s[i])
 	{
-		while()
+		res[i] = s[i];
+		i++;
 	}
+	return (res);
 }
 
-int main()
+char	*_nsx_strjoin(char *str1, char *str2)
 {
-	char *c = malloc(BUFFERSIZE + 1);
-	c[BUFFERSIZE] = '\0';
-	int fd = open("file.txt", O_RDONLY);
-	read(fd, c, BUFFERSIZE);
-	_prtstr(c);
-	close(fd);
+	int		i;
+	char	*res;
+
+	i = 0;
+	if (!str1)
+		return (_nsx_strdup(str2));
+	res = malloc(_nsx_strlen(str1) + _nsx_strlen(str2) + 1);
+	if (!res)
+		return (0);
+	while (*str1)
+	{
+		res[i++] = *str1++;
+	}
+	while (*str2)
+	{
+		res[i++] = *str2++;
+	}
+	res[i] = '\0';
+	return (res);
+}
+
+
+
+char	*get_next_line(int fd)
+{
+	int			read_len;
+	char		*buff;
+	static char	*res;
+
+	read_len = 1;
+	while (read_len)
+	{
+		buff = malloc(BUFFER_SIZE + 1);
+		buff[BUFFER_SIZE] = '\0';
+		read_len = read(fd, buff, BUFFER_SIZE);
+		res = _nsx_strjoin(res, buff);
+		free(buff);
+		printf("[static res] : %s\n", res);
+	}
+	return (res);
+}
+
+int	main(void)
+{
+	int	fd;
+
+	fd = open("file.txt", O_RDONLY);
+	printf("return : (%s)\n", get_next_line(fd));
+	// printf("return : (%s)", get_next_line(fd));
 }

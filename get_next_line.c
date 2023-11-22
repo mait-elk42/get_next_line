@@ -6,13 +6,13 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:13:31 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/22 15:36:39 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/22 17:43:47 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void	_nsx_initialize_list(t_node	**head, int fd)
+static void	_nsx_initialize_list(t_nsx_node	**head, int fd)
 {
 	int		i;
 	char	*readed_str;
@@ -46,12 +46,12 @@ int	_nsx_strlen(char *s)
 	return (i);
 }
 
-char	*_nsx_nodes_to_str(t_node	*head)
+char	*_nsx_nodes_to_str(t_nsx_node	*head)
 {
 	char	*res;
 	int		i;
 	int		j;
-	t_node	*tmphead;
+	t_nsx_node	*tmphead;
 
 	i = 0;
 	tmphead = head;
@@ -65,7 +65,7 @@ char	*_nsx_nodes_to_str(t_node	*head)
 	while (head)
 	{
 		i = 0;
-		while (head->data[i] && head->data[i] != '\n')
+		while (head->data[i] && head->data[i - 1] != '\n')
 		{
 			res[j++] = head->data[i++];
 		}
@@ -75,15 +75,51 @@ char	*_nsx_nodes_to_str(t_node	*head)
 	return (res);
 }
 
-void	_nsx_build_nodes(t_node	**head)
+char	*_nsx_salloc(char *s)
 {
-	t_node	*new_head;
-	
+	int		i;
+	char	*res;
+
+	i = 0;
+	res = malloc(_nsx_strlen(s + 1));
+	if (!res)
+		return (0);
+	while (s[i])
+	{
+		res[i] = s[i];
+		i++;
+	}
+	res[i] = '\0';
+	return (res);
+}
+
+void	_nsx_build_nodes(t_nsx_node	**head)
+{
+	char	*dataa;
+	int		i;
+	t_nsx_node	*new_head;
+
+	i = 0;
+	while ((*head)->next)
+	{
+		new_head = (*head)->next;
+		free((*head)->data);
+		free((*head));
+		*head = new_head;
+	}
+	while (new_head->data[i] && new_head->data[i - 1] != '\n')
+		i++;
+	dataa = _nsx_salloc(new_head->data + i);
+	free(new_head->data);
+	free(new_head);
+	new_head = _nsx_create_node(dataa);
+	new_head->next = 0;
+	*head = new_head;
 }
 
 char	*get_next_line(int fd)
 {
-	static t_node	*head;
+	static t_nsx_node	*head;
 	char			*newline;
 
 	_nsx_initialize_list(&head, fd);

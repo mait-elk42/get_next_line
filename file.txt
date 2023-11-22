@@ -1,2 +1,2 @@
-HELLOWORLDAGAIN
-NEWLINE
+Hello world ?
+New Stranger !

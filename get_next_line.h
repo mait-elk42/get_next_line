@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:24:42 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/22 17:43:44 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/24 15:34:43 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@
 #  define BUFFER_SIZE 5
 # endif
 
-typedef struct s_node
+typedef struct s_nsx_node
 {
-	char			*data;
-	struct s_node	*next;
+	char				*buffer;
+	struct s_nsx_node	*next;
 }	t_nsx_node;
 
-char	*get_next_line(int fd);
-t_nsx_node	*_nsx_create_node(char	*data);
-void	_nsx_add_node(t_nsx_node	**head, t_nsx_node	*new);
-// char _getnext_char(int fd);
+char		*get_next_line(int fd);
+int			_nsx_strlen(char *s);
+t_nsx_node	*_nsx_create_node(char	*buffer);
+void		_nsx_add_node(t_nsx_node	**head, t_nsx_node	*new);
 #endif

@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 10:54:40 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/22 17:41:42 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/24 20:19:35 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,7 @@ int	main(void)
 {
 	int	fd;
 
-	fd = open("file.txt", O_RDONLY);
-	// get_next_line(fd);
-	printf("(%s)\n", get_next_line(fd));
-	printf("(%s)", get_next_line(fd));
-	printf("(%s)", get_next_line(fd));
-	printf("(%s)", get_next_line(fd));
-
+	fd = open("file", O_RDONLY);
+	printf("RESULT : \n%s", get_next_line(fd));
+	printf("RESULT : \n%s", get_next_line(fd));
 }

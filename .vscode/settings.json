@@ -3,6 +3,11 @@
 		"get_next_line.h": "c",
 		"stdlib.h": "c",
 		"ostream": "c",
-		"unistd.h": "c"
+		"unistd.h": "c",
+		"array": "c",
+		"iterator": "c",
+		"string": "c",
+		"string_view": "c",
+		"vector": "c"
 	}
 }

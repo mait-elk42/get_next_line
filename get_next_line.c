@@ -6,124 +6,96 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:13:31 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/22 17:43:47 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/24 21:07:04 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void	_nsx_initialize_list(t_nsx_node	**head, int fd)
-{
-	int		i;
-	char	*readed_str;
-	int		len_read;
-
-	len_read = 1;
-	while (len_read)
-	{
-		i = 0;
-		readed_str = malloc(BUFFER_SIZE + 1);
-		readed_str[BUFFER_SIZE] = '\0';
-		len_read = read(fd, readed_str, BUFFER_SIZE);
-		_nsx_add_node(head, _nsx_create_node(readed_str));
-		while (readed_str[i])
-		{
-			if (readed_str[i] == '\n')
-				return ;
-			i++;
-		}
-	}
-}
-
-int	_nsx_strlen(char *s)
+int	_nsx_there_newline(char	*s)
 {
 	int	i;
 
 	i = 0;
-	if (!s)
-		while (s[i])
-			i++;
-	return (i);
-}
-
-char	*_nsx_nodes_to_str(t_nsx_node	*head)
-{
-	char	*res;
-	int		i;
-	int		j;
-	t_nsx_node	*tmphead;
-
-	i = 0;
-	tmphead = head;
-	while (tmphead)
-	{
-		i += _nsx_strlen(tmphead->data);
-		tmphead = tmphead->next;
-	}
-	res = malloc(i + 1);
-	j = 0;
-	while (head)
-	{
-		i = 0;
-		while (head->data[i] && head->data[i - 1] != '\n')
-		{
-			res[j++] = head->data[i++];
-		}
-		head = head->next;
-	}
-	res[j] = '\0';
-	return (res);
-}
-
-char	*_nsx_salloc(char *s)
-{
-	int		i;
-	char	*res;
-
-	i = 0;
-	res = malloc(_nsx_strlen(s + 1));
-	if (!res)
-		return (0);
 	while (s[i])
 	{
-		res[i] = s[i];
+		if (s[i] == '\n')
+			return (i);
 		i++;
 	}
-	res[i] = '\0';
-	return (res);
+	return (-1);
 }
 
-void	_nsx_build_nodes(t_nsx_node	**head)
+void	_nsx_nodes_clear(t_nsx_node	*head, t_nsx_node	**headptr)
 {
-	char	*dataa;
-	int		i;
-	t_nsx_node	*new_head;
+	t_nsx_node	*tmp;
 
-	i = 0;
-	while ((*head)->next)
+	if (!head)
+		return ;
+	while (head)
 	{
-		new_head = (*head)->next;
-		free((*head)->data);
-		free((*head));
-		*head = new_head;
+		tmp = head->next;
+		free(head->buffer);
+		free(head);
+		head = tmp;
 	}
-	while (new_head->data[i] && new_head->data[i - 1] != '\n')
-		i++;
-	dataa = _nsx_salloc(new_head->data + i);
-	free(new_head->data);
-	free(new_head);
-	new_head = _nsx_create_node(dataa);
-	new_head->next = 0;
-	*head = new_head;
+	*headptr = head;
+}
+
+char	*_nsx_nodes_to_str(t_nsx_node	**head)
+{
+	char		*res;
+	t_nsx_node	*tmphead;
+	int			len;
+	int			i;
+
+	len = 0;
+	tmphead = *head;
+	while (tmphead)
+	{
+		len += _nsx_strlen(tmphead->buffer);
+		tmphead = tmphead->next;
+	}
+	res = malloc(len + 1);
+	if (!res)
+		return (0);
+	tmphead = *head;
+	len = 0;
+	while (tmphead)
+	{
+		i = 0;
+		while (tmphead->buffer[i])
+		{
+			res[len++] = tmphead->buffer[i++];
+			if (tmphead->buffer[i-1] == '\n')
+				return (res);
+		}
+		tmphead = tmphead->next;
+	}
+	res[len] = '\0';
+	return (res);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_nsx_node	*head;
-	char			*newline;
+	static t_nsx_node	*head = 0;
+	int					nl_index;
+	int					read_len;
+	char				*buff;
 
-	_nsx_initialize_list(&head, fd);
-	newline = _nsx_nodes_to_str(head);
-	_nsx_build_nodes(&head);
-	return (newline);
+	read_len = 1;
+	nl_index = 0;
+	while (read_len)
+	{
+		buff = malloc(BUFFER_SIZE + 1);
+		read_len = read(fd, buff, BUFFER_SIZE);
+		buff[read_len] = '\0';
+		nl_index = _nsx_there_newline(buff);
+		_nsx_add_node(&head, _nsx_create_node(buff));
+		if (nl_index != -1)
+			break ;
+	}
+	buff = _nsx_nodes_to_str(&head);
+	_nsx_nodes_clear(head, &head);
+	return (buff);
 }

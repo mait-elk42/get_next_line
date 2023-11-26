@@ -6,96 +6,153 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:13:31 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/24 21:07:04 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/26 10:01:23 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	_nsx_there_newline(char	*s)
+char	*_nsx_join(char	*s1, char	*s2)
 {
-	int	i;
+	char	*res;
+	int		len;
+	int		i;
 
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '\n')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-void	_nsx_nodes_clear(t_nsx_node	*head, t_nsx_node	**headptr)
-{
-	t_nsx_node	*tmp;
-
-	if (!head)
-		return ;
-	while (head)
-	{
-		tmp = head->next;
-		free(head->buffer);
-		free(head);
-		head = tmp;
-	}
-	*headptr = head;
-}
-
-char	*_nsx_nodes_to_str(t_nsx_node	**head)
-{
-	char		*res;
-	t_nsx_node	*tmphead;
-	int			len;
-	int			i;
-
-	len = 0;
-	tmphead = *head;
-	while (tmphead)
-	{
-		len += _nsx_strlen(tmphead->buffer);
-		tmphead = tmphead->next;
-	}
+	if (!s1 && !s2)
+		return (0);
+	if (!s1)
+		return (s2);
+	if (!s2)
+		return (s1);
+	len = _nsx_strlen(s1) + _nsx_strlen(s2);
 	res = malloc(len + 1);
 	if (!res)
-		return (0);
-	tmphead = *head;
-	len = 0;
-	while (tmphead)
 	{
-		i = 0;
-		while (tmphead->buffer[i])
-		{
-			res[len++] = tmphead->buffer[i++];
-			if (tmphead->buffer[i-1] == '\n')
-				return (res);
-		}
-		tmphead = tmphead->next;
+    	if (s1)
+			free(s1);
+    	if (s2)
+			free(s2);
+    	return (NULL);
 	}
 	res[len] = '\0';
+	i = 0;
+	len = 0;
+	while (s1[i])
+		res[len++] = s1[i++];
+	i = 0;
+	while (s2[i])
+		res[len++] = s2[i++];
+	// if (s1)
+	// 	free(s1);
+    // if (s2)
+	// 	free(s2);
 	return (res);
+}
+
+int	_nsx_there_nwline(char	*s)
+{
+	if (s)
+	{
+		while (*s)
+		{
+			if (*s == '\n')
+				return (1);
+			s++;
+		}
+	}
+	return (0);
+}
+
+char	*_nsx_get_next(char	*res)
+{
+	char	*result;
+	int		nl_index;
+	int		i;
+
+	i = 0;
+	nl_index = 0;
+	if (!res)
+		return (0);
+	while (res[nl_index] && res[nl_index] != '\n')
+		nl_index++;
+	nl_index++;
+	if (res[nl_index] == '\0')
+		return (0);
+	result = malloc(_nsx_strlen(res + nl_index) + 1);
+	if (!result)
+		return (0);
+	while (res[nl_index])
+		result[i++] = res[nl_index++];
+	result[i] = '\0';
+	return (result);
+}
+
+char	*_nsx_trimnl(char	*res)
+{
+	char	*result;
+	int		i;
+
+	i = 0;
+	if (!res)
+		return (0);
+	if (!_nsx_there_nwline(res))
+		return (res);
+	while (res[i] && res[i] != '\n')
+		i++;
+	i++;
+	result = malloc(i + 1);
+	if (!result)
+		return (0);
+	i = 0;
+	while (res[i])
+	{
+		result[i] = res[i];
+		i++;
+		if (result[i - 1] == '\n')
+			break ;
+	}
+	result[i] = '\0';
+	free(res);
+	return (result);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_nsx_node	*head = 0;
-	int					nl_index;
-	int					read_len;
-	char				*buff;
+	int			there_nl;
+	static char	*static_buffer;
+	char		*read_buff;
+	char		*res;
+	int			readlen;
 
-	read_len = 1;
-	nl_index = 0;
-	while (read_len)
+	readlen = 1;
+	res = 0;
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (NULL);
+	res = _nsx_join(res, static_buffer);
+	while (readlen)
 	{
-		buff = malloc(BUFFER_SIZE + 1);
-		read_len = read(fd, buff, BUFFER_SIZE);
-		buff[read_len] = '\0';
-		nl_index = _nsx_there_newline(buff);
-		_nsx_add_node(&head, _nsx_create_node(buff));
-		if (nl_index != -1)
+		read_buff = 0;
+		read_buff = malloc(BUFFER_SIZE + 1);
+		if (!read_buff)
+		{
+			if (res != NULL)
+				free(res);
+			return (NULL);
+		}
+		readlen = read(fd, read_buff, BUFFER_SIZE);
+		read_buff[readlen] = '\0';
+		there_nl = _nsx_there_nwline(read_buff);
+		res = _nsx_join(res, read_buff);
+		if (!res)
+			return (0);
+		if (there_nl)
 			break ;
 	}
-	buff = _nsx_nodes_to_str(&head);
-	_nsx_nodes_clear(head, &head);
-	return (buff);
+	if (there_nl)
+		static_buffer = _nsx_get_next(res);
+	res = _nsx_trimnl(res);
+	if (!*res)
+		return (free(res), NULL);
+	return (res);
 }
+

@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:27:14 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/26 17:21:07 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/26 23:04:03 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,20 @@ int	_nsx_strlen(char *s)
 	return (i);
 }
 
-char	*_nsx_join(char	**s1, char	*s2)
+void	_nsx_join(char	**s1, char	*s2)
 {
 	char	*res;
 	int		len;
 	int		i;
 
-	if (!s1 || (!*s1 && !s2))
-		return (0);
-	if (!s2)
-		return (*s1);
+	i = 0;
+	if (!s1 || (!*s1 && !s2) || !s2)
+		return ;
 	len = _nsx_strlen(*s1) + _nsx_strlen(s2);
 	res = malloc(len + 1);
 	if (!res)
-		return (free(*s1), *s1 = NULL, NULL);
+		return (free(*s1), *s1 = NULL, (void) NULL);
 	res[len] = '\0';
-	i = 0;
 	len = 0;
 	if (*s1)
 		while ((*s1)[i])
@@ -48,19 +46,17 @@ char	*_nsx_join(char	**s1, char	*s2)
 		res[len++] = s2[i++];
 	free(*s1);
 	*s1 = res;
-	return (res);
 }
 
 int	_nsx_there_nwline(char	*s)
 {
-	if (s)
+	if (!s || !*s)
+		return (0);
+	while (*s)
 	{
-		while (*s)
-		{
-			if (*s == '\n')
-				return (1);
-			s++;
-		}
+		if (*s == '\n')
+			return (1);
+		s++;
 	}
 	return (0);
 }
@@ -104,7 +100,7 @@ char	*_nsx_trimnl(char	*res)
 	i++;
 	result = malloc(i + 1);
 	if (!result)
-		return (0);
+		return (free(res), NULL);
 	i = 0;
 	while (res[i])
 	{

@@ -12,6 +12,8 @@
 		"bitset": "c",
 		"stdio.h": "c",
 		"get_next_line_bonus.h": "c",
-		"limits.h": "c"
+		"limits.h": "c",
+		"utils.h": "c",
+		"system_error": "c"
 	}
 }

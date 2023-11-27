@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:27:14 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/27 18:13:14 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/27 18:29:59 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,29 +23,29 @@ int	_nsx_strlen(char *s)
 	return (i);
 }
 
-void	_nsx_join(char	**s1, char	*s2)
+char	*_nsx_join(char	*s1, char	*s2)
 {
 	char	*res;
 	int		len;
 	int		i;
 
 	i = 0;
-	if (!s1 || (!*s1 && !s2) || !s2)
-		return ;
-	len = _nsx_strlen(*s1) + _nsx_strlen(s2);
+	if (!s2)
+		return (s1);
+	len = _nsx_strlen(s1) + _nsx_strlen(s2);
 	res = malloc(len + 1);
 	if (!res)
-		return (free(*s1), *s1 = NULL, (void) NULL);
+		return (free(s1), NULL);
 	res[len] = '\0';
 	len = 0;
-	if (*s1)
-		while ((*s1)[i])
-			res[len++] = (*s1)[i++];
+	if (s1)
+		while ((s1)[i])
+			res[len++] = (s1)[i++];
 	i = 0;
 	while (s2[i])
 		res[len++] = s2[i++];
-	free(*s1);
-	*s1 = res;
+	free(s1);
+	return (res);
 }
 
 int	_nsx_there_nwline(char	*s)
@@ -85,7 +85,7 @@ char	*_nsx_get_next(char	*res)
 	return (result);
 }
 
-char	*_nsx_trimnl(char	*res)
+char	*_nsx_trimnl(char	*res, char	**static_buffer)
 {
 	char	*result;
 	int		i;
@@ -100,7 +100,7 @@ char	*_nsx_trimnl(char	*res)
 	i++;
 	result = malloc(i + 1);
 	if (!result)
-		return (free(res), NULL);
+		return (free(*static_buffer), *static_buffer = 0, free(res), NULL);
 	i = 0;
 	while (res[i])
 	{

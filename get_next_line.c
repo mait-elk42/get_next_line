@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:13:31 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/27 18:17:18 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/27 18:20:09 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (free(static_buffer), static_buffer = NULL, NULL);
 	_nsx_join(&result, static_buffer);
+
 	// if (!result)
 	// 	return (free(static_buffer), static_buffer = 0, NULL);
 	static_buffer = (free(static_buffer), NULL);

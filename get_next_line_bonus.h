@@ -1,20 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:24:42 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/27 10:02:14 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/27 10:48:20 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <limits.h>
 # include <fcntl.h>
 
 # ifndef BUFFER_SIZE

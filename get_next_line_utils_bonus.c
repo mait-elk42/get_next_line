@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:27:14 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/27 10:13:29 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/27 10:45:30 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	_nsx_strlen(char *s)
 {

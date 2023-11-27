@@ -9,6 +9,9 @@
 		"string": "c",
 		"string_view": "c",
 		"vector": "c",
-		"bitset": "c"
+		"bitset": "c",
+		"stdio.h": "c",
+		"get_next_line_bonus.h": "c",
+		"limits.h": "c"
 	}
 }

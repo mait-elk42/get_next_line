@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:24:42 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/27 18:30:18 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/11/27 22:24:00 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <limits.h>
 # include <fcntl.h>
 
 # ifndef BUFFER_SIZE

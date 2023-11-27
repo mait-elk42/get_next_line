@@ -15,6 +15,7 @@
 		"limits.h": "c",
 		"utils.h": "c",
 		"system_error": "c",
-		"__locale": "c"
+		"__locale": "c",
+		"fcntl.h": "c"
 	}
 }

@@ -16,6 +16,7 @@
 		"utils.h": "c",
 		"system_error": "c",
 		"__locale": "c",
-		"fcntl.h": "c"
+		"fcntl.h": "c",
+		"string.h": "c"
 	}
 }

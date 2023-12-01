@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:27:14 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/27 22:34:28 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/12/01 18:30:48 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ char	*_nsx_join(char	*s1, char	*s2)
 	int		i;
 
 	i = 0;
+	if (!s1 && !s2)
+		return (0);
 	if (!s2)
 		return (s1);
 	len = _nsx_strlen(s1) + _nsx_strlen(s2);
@@ -69,7 +71,7 @@ char	*_nsx_get_next(char	*res)
 
 	i = 0;
 	nl_index = 0;
-	if (!res)
+	if (!res || !_nsx_there_nwline(res))
 		return (0);
 	while (res[nl_index] && res[nl_index] != '\n')
 		nl_index++;

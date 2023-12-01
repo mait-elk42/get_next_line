@@ -6,11 +6,19 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/27 22:38:14 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/11/27 22:47:40 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/12/01 18:42:25 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+
+static char	*_nsx_checkerror(int fd, char **static_buffer)
+{
+	if (static_buffer[fd] && fd >= 0)
+		free(static_buffer[fd]);
+	static_buffer[fd] = NULL;
+	return (0);
+}
 
 char	*get_next_line(int fd)
 {
@@ -21,11 +29,11 @@ char	*get_next_line(int fd)
 
 	read_len = 1;
 	result = 0;
-	if (BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE >= INT_MAX)
-		return (free(static_buffer[fd]), static_buffer[fd] = NULL, NULL);
+	if (BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1 || BUFFER_SIZE > INT_MAX)
+		return (_nsx_checkerror(fd, static_buffer));
 	result = _nsx_join(result, static_buffer[fd]);
 	static_buffer[fd] = (free(static_buffer[fd]), NULL);
-	read_buffer = malloc(BUFFER_SIZE + 1);
+	read_buffer = malloc((size_t)BUFFER_SIZE + 1);
 	if (!read_buffer)
 		return (free(result), free(static_buffer[fd]),
 			static_buffer[fd] = NULL, NULL);

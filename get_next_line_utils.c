@@ -6,7 +6,7 @@
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 21:27:14 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/12/01 18:30:48 by mait-elk         ###   ########.fr       */
+/*   Updated: 2023/12/02 11:07:31 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ char	*_nsx_trimnl(char	*res, char	**static_buffer)
 	i = 0;
 	if (!res || !*res)
 		return (free(res), NULL);
+	*static_buffer = _nsx_get_next(res);
 	if (!_nsx_there_nwline(res))
 		return (res);
 	while (res[i] && res[i] != '\n')
@@ -112,6 +113,5 @@ char	*_nsx_trimnl(char	*res, char	**static_buffer)
 			break ;
 	}
 	result[i] = '\0';
-	free(res);
-	return (result);
+	return (free(res), result);
 }

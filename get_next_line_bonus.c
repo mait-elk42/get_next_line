@@ -5,46 +5,59 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mait-elk <mait-elk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/27 22:38:14 by mait-elk          #+#    #+#             */
-/*   Updated: 2023/12/01 18:42:25 by mait-elk         ###   ########.fr       */
+/*   Created: 2023/11/17 21:13:31 by mait-elk          #+#    #+#             */
+/*   Updated: 2023/12/02 12:02:17 by mait-elk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char	*_nsx_checkerror(int fd, char **static_buffer)
+int	checkosf(int fd)
 {
-	if (static_buffer[fd] && fd >= 0)
-		free(static_buffer[fd]);
-	static_buffer[fd] = NULL;
+	return (fd < 0 || BUFFER_SIZE <= 0 
+		|| read(fd, 0, 0) < 0 || BUFFER_SIZE > 2147483647);
+}
+
+char	*freeosf(char *result, char **s_bfr, char *r_bfr, int fd)
+{
+	return (free(result), free(s_bfr[fd]), free(r_bfr), s_bfr[fd] = 0, NULL);
+}
+
+char	*freeosf2(char **s_bfr, int fd)
+{
+	if (fd < 0)
+		return (0);
+	if (s_bfr[fd])
+		free(s_bfr[fd]);
+	s_bfr[fd] = 0;
 	return (0);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*static_buffer[OPEN_MAX];
-	char		*read_buffer;
+	static char	*s_bfr[OPEN_MAX];
+	char		*r_bfr;
 	char		*result;
 	int			read_len;
 
 	read_len = 1;
 	result = 0;
-	if (BUFFER_SIZE <= 0 || read(fd, 0, 0) == -1 || BUFFER_SIZE > INT_MAX)
-		return (_nsx_checkerror(fd, static_buffer));
-	result = _nsx_join(result, static_buffer[fd]);
-	static_buffer[fd] = (free(static_buffer[fd]), NULL);
-	read_buffer = malloc((size_t)BUFFER_SIZE + 1);
-	if (!read_buffer)
-		return (free(result), free(static_buffer[fd]),
-			static_buffer[fd] = NULL, NULL);
-	while (read_len)
+	if (checkosf(fd))
+		return (freeosf2(s_bfr, fd));
+	result = _nsx_join(result, s_bfr[fd]);
+	s_bfr[fd] = (free(s_bfr[fd]), NULL);
+	r_bfr = malloc((size_t)BUFFER_SIZE + 1);
+	if (!r_bfr)
+		return (free(result), free(s_bfr[fd]), s_bfr[fd] = NULL, NULL);
+	while (_nsx_there_nwline(result) != 1 && read_len)
 	{
-		read_len = read(fd, read_buffer, BUFFER_SIZE);
-		read_buffer[read_len] = '\0';
-		result = _nsx_join(result, read_buffer);
-		if (_nsx_there_nwline(read_buffer))
+		read_len = read(fd, r_bfr, BUFFER_SIZE);
+		if (read_len == -1)
+			return (freeosf(result, s_bfr, r_bfr, fd));
+		r_bfr[read_len] = '\0';
+		result = _nsx_join(result, r_bfr);
+		if (!result)
 			break ;
 	}
-	static_buffer[fd] = _nsx_get_next(result);
-	return (free(read_buffer), _nsx_trimnl(result, &static_buffer[fd]));
+	return (free(r_bfr), _nsx_trimnl(result, &s_bfr[fd]));
 }
